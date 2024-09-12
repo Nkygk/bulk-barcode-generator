@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Bulk Barcode Generator with Labels</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        textarea { width: 80%; height: 100px; margin-bottom: 20px; }
+        .barcode-container { display: flex; flex-wrap: wrap; justify-content: center; }
+        .barcode-item { margin: 20px; text-align: center; }
+        svg { width: 200px; height: 100px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+</head>
+<body>
+    <h1>Advanced Bulk Barcode Generator with Labels</h1>
+    <textarea id="barcodeInput" placeholder="Enter values for barcodes, one per line"></textarea><br>
+
+    <label for="barcodeFormat">Barcode Format: </label>
+    <select id="barcodeFormat">
+        <option value="CODE128">CODE128</option>
+        <option value="EAN13">EAN13</option>
+        <option value="UPC">UPC</option>
+    </select><br><br>
+
+    <label for="barcodeColor">Barcode Color: </label>
+    <input type="color" id="barcodeColor" value="#000000"><br><br>
+
+    <button onclick="generateBarcodes()">Generate Barcodes</button>
+    <div class="barcode-container" id="barcodeOutput"></div>
+
+    <script>
+        function generateBarcodes() {
+            const input = document.getElementById('barcodeInput').value;
+            const format = document.getElementById('barcodeFormat').value;
+            const color = document.getElementById('barcodeColor').value;
+            const output = document.getElementById('barcodeOutput');
+            output.innerHTML = ''; // Clear previous barcodes
+
+            const values = input.split('\n').filter(value => value.trim());
+
+            values.forEach(value => {
+                const div = document.createElement('div');
+                div.classList.add('barcode-item');
+
+                const label = document.createElement('p');
+                label.textContent = value.trim();
+                div.appendChild(label);
+
+                const svg = document.createElement('svg');
+                JsBarcode(svg, value.trim(), {
+                    format: format,
+                    lineColor: color,
+                    width: 2,
+                    height: 100,
+                    displayValue: false
+                });
+                div.appendChild(svg);
+
+                output.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
